@@ -1,0 +1,15 @@
+{
+  "quizzes": [
+    {
+      "id": "q1",
+      "question": "DEWA LV earthing for riser?",
+      "options": [
+        "TT",
+        "TN-S",
+        "IT",
+        "TN-C"
+      ],
+      "answer": 1
+    }
+  ]
+}

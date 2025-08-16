@@ -1,0 +1,3 @@
+- Set your backend URL in `lib/services/qa_service.dart`.
+- Add DEWA/Dubai PDFs into `assets/pdfs/`.
+- Push changes anytime to rebuild APK.
