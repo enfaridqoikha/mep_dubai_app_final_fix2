@@ -1,0 +1,42 @@
+name: Build Flutter APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Flutter version
+        run: flutter --version
+      - name: Scaffold Android (flutter create)
+        run: flutter create . --platforms=android
+      - name: Patch NDK version to 27.0.12077973
+        run: |
+          FILE=android/app/build.gradle
+          if [ -f "$FILE" ]; then
+            echo "Patching $FILE with ndkVersion 27.0.12077973"
+            awk '
+              BEGIN{done=0}
+              /android\s*{/ && done==0 {
+                print $0 "\n    ndkVersion \"27.0.12077973\""
+                done=1
+                next
+              }
+              {print}
+            ' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+          fi
+      - name: Get packages
+        run: flutter pub get
+      - name: Build release APK
+        run: flutter build apk --release
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mep-dubai-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
